@@ -10,19 +10,27 @@ APP_BUNDLE="$PROJECT_DIR/$APP_NAME.app"
 
 echo "Building $APP_NAME..."
 
-# Check if binary exists (should be built by workflow already)
-if [ ! -f "$PROJECT_DIR/BrewBar/.build/release/$APP_NAME" ]; then
+# Navigate to package directory
+cd "$PROJECT_DIR/BrewBar"
+
+# Get the actual binary path (works for any architecture)
+BIN_PATH=$(swift build --show-bin-path -c release 2>/dev/null || echo "")
+
+# Check if we need to build
+if [ -z "$BIN_PATH" ] || [ ! -f "$BIN_PATH/$APP_NAME" ]; then
     echo "Building release binary..."
-    cd "$PROJECT_DIR/BrewBar"
     swift build -c release
+    BIN_PATH=$(swift build --show-bin-path -c release)
 fi
+
+echo "Binary path: $BIN_PATH/$APP_NAME"
 
 # Create app bundle structure
 mkdir -p "$APP_BUNDLE/Contents/MacOS"
 mkdir -p "$APP_BUNDLE/Contents/Resources"
 
 # Copy binary
-cp "$PROJECT_DIR/BrewBar/.build/release/$APP_NAME" "$APP_BUNDLE/Contents/MacOS/"
+cp "$BIN_PATH/$APP_NAME" "$APP_BUNDLE/Contents/MacOS/"
 
 # Create Info.plist
 cat > "$APP_BUNDLE/Contents/Info.plist" << 'EOF'
