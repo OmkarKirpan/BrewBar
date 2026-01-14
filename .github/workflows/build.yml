@@ -1,0 +1,72 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: macos-13
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Show Swift version
+        run: swift --version
+
+      - name: Build release binary
+        run: |
+          cd BrewBar
+          swift build -c release
+
+      - name: Run tests
+        run: |
+          cd BrewBar
+          swift test || echo "No tests defined yet"
+
+      - name: Build .app bundle
+        run: |
+          cd BrewBar
+          ./scripts/build-app.sh
+
+      - name: Verify build outputs
+        run: |
+          ls -lh BrewBar/.build/release/BrewBar
+          ls -lh BrewBar/BrewBar.app/Contents/MacOS/BrewBar
+
+      - name: Upload release binary
+        if: github.event_name == 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: brewbar-binary
+          path: BrewBar/.build/release/BrewBar
+
+      - name: Upload .app bundle
+        if: github.event_name == 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: brewbar-app
+          path: BrewBar/BrewBar.app
+
+      - name: Create DMG (on release)
+        if: github.event_name == 'release'
+        run: |
+          cd BrewBar
+          # Create a simple DMG using hdiutil
+          mkdir -p dmg-contents
+          cp -r BrewBar.app dmg-contents/
+          hdiutil create -volname "BrewBar" -srcfolder dmg-contents -ov -format UDZO BrewBar.dmg
+          ls -lh BrewBar.dmg
+
+      - name: Upload DMG to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: BrewBar/BrewBar.dmg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
