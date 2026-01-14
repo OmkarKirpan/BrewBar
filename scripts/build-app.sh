@@ -10,16 +10,19 @@ APP_BUNDLE="$PROJECT_DIR/$APP_NAME.app"
 
 echo "Building $APP_NAME..."
 
-# Build release binary
-cd "$PROJECT_DIR/BrewBar"
-swift build -c release
+# Check if binary exists (should be built by workflow already)
+if [ ! -f "$PROJECT_DIR/BrewBar/.build/release/$APP_NAME" ]; then
+    echo "Building release binary..."
+    cd "$PROJECT_DIR/BrewBar"
+    swift build -c release
+fi
 
 # Create app bundle structure
 mkdir -p "$APP_BUNDLE/Contents/MacOS"
 mkdir -p "$APP_BUNDLE/Contents/Resources"
 
 # Copy binary
-cp ".build/release/$APP_NAME" "$APP_BUNDLE/Contents/MacOS/"
+cp "$PROJECT_DIR/BrewBar/.build/release/$APP_NAME" "$APP_BUNDLE/Contents/MacOS/"
 
 # Create Info.plist
 cat > "$APP_BUNDLE/Contents/Info.plist" << 'EOF'
