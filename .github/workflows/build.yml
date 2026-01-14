@@ -23,6 +23,7 @@ jobs:
         run: |
           cd BrewBar
           swift build -c release
+          echo "BIN_PATH=$(swift build --show-bin-path -c release)" >> $GITHUB_ENV
 
       - name: Run tests
         run: |
@@ -34,7 +35,8 @@ jobs:
 
       - name: Verify build outputs
         run: |
-          ls -lh BrewBar/.build/release/BrewBar
+          echo "Binary location: $BIN_PATH/BrewBar"
+          ls -lh $BIN_PATH/BrewBar
           ls -lh BrewBar.app/Contents/MacOS/BrewBar
 
       - name: Upload release binary
@@ -42,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: brewbar-binary
-          path: BrewBar/.build/release/BrewBar
+          path: ${{ env.BIN_PATH }}/BrewBar
 
       - name: Upload .app bundle
         if: github.event_name == 'release'
