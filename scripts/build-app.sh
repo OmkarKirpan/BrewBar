@@ -11,7 +11,7 @@ APP_BUNDLE="$PROJECT_DIR/$APP_NAME.app"
 echo "Building $APP_NAME..."
 
 # Build release binary
-cd "$PROJECT_DIR"
+cd "$PROJECT_DIR/BrewBar"
 swift build -c release
 
 # Create app bundle structure
