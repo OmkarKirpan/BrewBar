@@ -92,6 +92,24 @@ BrewBar is distributed unsigned to keep it free and open-source.
    - Launch at Login toggle
    - About & author info
 
+## CLI Commands
+
+BrewBar supports command-line arguments:
+
+```bash
+# Show version
+BrewBar --version
+BrewBar -v
+
+# Show help
+BrewBar --help
+BrewBar -h
+```
+
+When launched without arguments, BrewBar runs as a menubar application.
+
+**Note:** On first launch, BrewBar automatically enables "Launch at Login". You can disable this in Settings.
+
 ## Project Structure
 
 ```
