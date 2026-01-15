@@ -22,7 +22,7 @@ struct BrewBarApp: App {
         // Handle CLI arguments before app launches
         let args = CommandLine.arguments
         if args.contains("--version") || args.contains("-v") {
-            print("BrewBar v1.1.0")
+            print("BrewBar v1.1.1")
             Darwin.exit(0)
         }
         if args.contains("--help") || args.contains("-h") {
