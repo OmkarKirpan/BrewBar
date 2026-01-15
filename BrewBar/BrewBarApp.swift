@@ -9,6 +9,7 @@
 //
 
 import SwiftUI
+import Darwin
 
 @main
 struct BrewBarApp: App {
@@ -16,6 +17,35 @@ struct BrewBarApp: App {
     @StateObject private var toastManager = ToastManager()
     @StateObject private var pollingManager = PollingManager()
     @StateObject private var launchAtLoginManager = LaunchAtLoginManager()
+
+    init() {
+        // Handle CLI arguments before app launches
+        let args = CommandLine.arguments
+        if args.contains("--version") || args.contains("-v") {
+            print("BrewBar v1.1.0")
+            Darwin.exit(0)
+        }
+        if args.contains("--help") || args.contains("-h") {
+            printHelp()
+            Darwin.exit(0)
+        }
+    }
+
+    private func printHelp() {
+        print("""
+        BrewBar - Native macOS menubar app for managing Homebrew services
+
+        Usage: BrewBar [options]
+
+        Options:
+          -v, --version    Show version information
+          -h, --help       Show this help message
+
+        When launched without options, BrewBar runs as a menubar application.
+
+        For more information, visit: https://github.com/omkarkirpan/BrewBar
+        """)
+    }
 
     var body: some Scene {
         MenuBarExtra("BrewBar", systemImage: "mug.fill") {

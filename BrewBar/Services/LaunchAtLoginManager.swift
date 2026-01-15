@@ -22,9 +22,23 @@ class LaunchAtLoginManager: ObservableObject {
         }
     }
 
+    private let hasLaunchedBeforeKey = "hasLaunchedBefore"
+
     init() {
         // Check current status on init
-        self.isEnabled = SMAppService.mainApp.status == .enabled
+        let currentStatus = SMAppService.mainApp.status == .enabled
+        self.isEnabled = currentStatus
+
+        // Auto-enable on first launch
+        if !UserDefaults.standard.bool(forKey: hasLaunchedBeforeKey) {
+            UserDefaults.standard.set(true, forKey: hasLaunchedBeforeKey)
+            if !currentStatus {
+                // Auto-register on first launch
+                DispatchQueue.main.async { [weak self] in
+                    self?.isEnabled = true  // This triggers updateLoginItemStatus()
+                }
+            }
+        }
     }
 
     private func updateLoginItemStatus() {

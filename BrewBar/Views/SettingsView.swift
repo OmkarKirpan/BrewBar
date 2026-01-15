@@ -65,7 +65,7 @@ struct SettingsView: View {
 
             // Footer with version info
             HStack {
-                Text("BrewBar v1.0.0")
+                Text("BrewBar v1.1.0")
                     .font(.system(size: 10))
                     .foregroundColor(.secondary)
 
