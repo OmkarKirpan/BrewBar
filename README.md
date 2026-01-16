@@ -19,16 +19,18 @@ A native macOS menubar app for managing Homebrew services.
 
 ## Screenshots
 
+<img width="1280" height="640" alt="BrewBar-ok" src="https://github.com/user-attachments/assets/a50b0436-5cee-44fe-b7fc-1568d4834946" />
+
 ```
 ┌─────────────────────────────────┐
-│ BrewBar              ↻  ▶  ■   │
+│ BrewBar              ↻  ▶  ■    │
 ├─────────────────────────────────┤
 │ ● postgresql@17              ▶■↻│
 │ ● redis                      ▶■↻│
 │ ○ mysql                      ▶■↻│
 │ ○ nginx                      ▶■↻│
 ├─────────────────────────────────┤
-│ ⚙                        Quit  │
+│ ⚙                        Quit   │
 └─────────────────────────────────┘
 ```
 
